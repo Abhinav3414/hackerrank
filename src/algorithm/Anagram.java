@@ -1,11 +1,9 @@
 package algorithm;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Scanner;
-import java.util.TreeMap;
 
 public class Anagram {
 	
@@ -28,66 +26,86 @@ public class Anagram {
 			{
 				String left=str.substring(0,l/2);
 				String right=str.substring(l/2,l);
-				/*
-				System.out.println(left);
-				System.out.println(right);*/
 
-				List<String> lList= new ArrayList<String>();
-				List<String> rList= new ArrayList<String>();
+				Map<String,Integer> lMap= new HashMap<String,Integer>();
+				Map<String,Integer> rMap= new HashMap<String,Integer>();
 
 				for (int j = 0; j < left.length(); j++) 
 				{
 					String lStr=String.valueOf(left.charAt(j));
 					String rStr=String.valueOf(right.charAt(j));
-					lList.add(lStr);
-					rList.add(rStr);
 					
-				}
-				
-				  Collections.sort(lList);
-				  Collections.sort(rList);
-				  
-				  System.out.println(lList);
-				  System.out.println(rList);
-			 int count=0;
-				  
-			 int j=0;
-				  while(lList!=null) 
-				  {
-					  if(j==lList.size())
-						  break;
-					  
-					  String lChar=lList.get(j);
-					  int p=0;
-					 
-					  for (String string : rList) {
-						if(lChar.equals(string))
-						{lList.remove(j);
-						rList.remove(p);
-						j=0;
-						break;
-						}
-						else
-						{
-							p++;
-						}
+					if(lMap.containsKey(lStr))
+					{
+						int val=lMap.get(lStr);	val++;
+						lMap.remove(lStr); lMap.put(lStr, val);			
 					}
-					  j++;
+					else
+						lMap.put(lStr, 1);	
+					
+					if(rMap.containsKey(rStr))
+					{
+						int val=rMap.get(rStr);	val++;
+						rMap.remove(rStr); rMap.put(rStr, val);			
+					}
+					else
+						rMap.put(rStr, 1);	
+				}
+
+				  
+				  for (Entry<String,Integer> entry : lMap.entrySet()) 
+				  {
+					  String key=entry.getKey();
+					  int value= entry.getValue();  
+					  
+					  if(rMap.containsKey(key))
+					  {						  
+						  int rValue=rMap.get(key);
+						  
+						  if(value==rValue)
+						  {
+							  lMap.put(key,0);
+							  rMap.put(key,0);
+						  }
+						  if(value>rValue)
+						  {
+							  lMap.put(key,value-rValue);
+							  rMap.put(key,0);
+						  }
+						  if(value<rValue)
+						  {
+							  lMap.put(key,0);
+							  rMap.put(key,rValue-value);
+						  } 
+					  }			  
 				  }
 
-				  if(lList.get(0).equals(rList.get(0)))
-					  {
-					  	lList.remove(0);
-					  	rList.remove(0);
-					  }
-				  System.out.println(lList);
-				  System.out.println(rList);
-				  System.out.println(lList.size());
-		//		  System.out.println(rList);
-					
-			}
+				  int lSum=0;
+				  int rSum=0;
+				  
+				  for (Entry<String,Integer> entry : lMap.entrySet()) 
+				  {
+					  String key=entry.getKey();
+					  int value= entry.getValue();
+					  lSum=lSum+value;
+				  }
+				  
+				  for (Entry<String,Integer> entry : rMap.entrySet()) 
+				  {
+					  String key=entry.getKey();
+					  int value= entry.getValue();
+					  rSum=rSum+value;
+				  }
+				  
+				 int fin=0;
+				 fin =(lSum>=rSum)?lSum:rSum;  
+				 System.out.println(fin);  
+				  
+			}  // else
 				
-		}
+		} // for closes
+	
+	
 	}
 
 }
